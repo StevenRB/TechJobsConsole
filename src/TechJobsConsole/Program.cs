@@ -23,6 +23,7 @@ namespace TechJobsConsole
             columnChoices.Add("all", "All");
 
             Console.WriteLine("Welcome to LaunchCode's TechJobs App!");
+            Console.WriteLine("Exit search with Ctrl+C");
 
             // Allow user to search/list until they manually quit with ctrl+c
             while (true)
@@ -63,7 +64,10 @@ namespace TechJobsConsole
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        //Very similiar to else statement 
+                        searchResults = JobData.FindByValue(searchTerm);
+                        PrintJobs(searchResults);
+                        //Console.WriteLine("Search all fields not yet implemented.");
                     }
                     else
                     {
@@ -98,7 +102,7 @@ namespace TechJobsConsole
                 {
                     Console.WriteLine(j + " - " + choices[choiceKeys[j]]);
                 }
-
+                // TODO fix search term formatting
                 string input = Console.ReadLine();
                 choiceIdx = int.Parse(input);
 
@@ -116,9 +120,31 @@ namespace TechJobsConsole
             return choiceKeys[choiceIdx];
         }
 
-        private static void PrintJobs(List<Dictionary<string, string>> someJobs)
+        private static void PrintJobs(List< Dictionary<string, string> > someJobs)
         {
-            Console.WriteLine("printJobs is not implemented yet");
+            String jobInfo = "\n****\n";
+
+            foreach(Dictionary<string,string> job in someJobs) // iterate into the List
+            {
+                jobInfo += "\n****\n";
+
+                foreach(string jobColumn in job.Keys)
+                {
+                 jobInfo += (jobColumn + ":" + job[jobColumn] + "\n");
+                    
+                }
+                jobInfo += "\n****\n";
+            }
+        
+            if (jobInfo.Equals("\n****\n"))
+            {
+                Console.WriteLine("\n****\nNo results in data set.\n****\n");
+            }
+            else
+            {
+                Console.WriteLine("{0}", jobInfo);
+            }
+        
         }
     }
 }

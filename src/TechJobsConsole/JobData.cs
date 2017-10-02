@@ -7,6 +7,7 @@ namespace TechJobsConsole
 {
     class JobData
     {
+        //Separation of concerns
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
 
@@ -34,6 +35,7 @@ namespace TechJobsConsole
                 {
                     values.Add(aValue);
                 }
+
             }
             return values;
         }
@@ -48,8 +50,9 @@ namespace TechJobsConsole
             foreach (Dictionary<string, string> row in AllJobs)
             {
                 string aValue = row[column];
-
-                if (aValue.Contains(value))
+                //Search is now case-insensitive
+                if (aValue.ToLower().Contains(value.ToLower()))
+                //Original reads "if (aValue.Contains(value))
                 {
                     jobs.Add(row);
                 }
@@ -59,6 +62,7 @@ namespace TechJobsConsole
         }
 
         /*
+         * Acting as test database in application
          * Load and parse data from job_data.csv
          */
         private static void LoadData()
@@ -83,6 +87,7 @@ namespace TechJobsConsole
                     }
                 }
             }
+            //This function's methods successfully reads csv files
 
             string[] headers = rows[0];
             rows.Remove(headers);
@@ -105,6 +110,7 @@ namespace TechJobsConsole
         /*
          * Parse a single line of a CSV file into a string array
          */
+
         private static string[] CSVRowToStringArray(string row, char fieldSeparator = ',', char stringSeparator = '\"')
         {
             bool isBetweenQuotes = false;
@@ -138,5 +144,61 @@ namespace TechJobsConsole
 
             return rowValues.ToArray();
         }
+    
+        // Beyond this comment all the code is new from group discussion
+        
+        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        {
+            // load data, if not already loaded
+            LoadData(); 
+
+            List<Dictionary<string, string>> job = new List<Dictionary<string, string>>();
+
+            //OUTER LAYER DICTIONARY ITERATES LIST
+            foreach (Dictionary<string, string> jobs in AllJobs)
+            {
+                //INNER LAYER KEYVALUEPAIR ITERATES DICTIONARY
+                foreach (KeyValuePair<string,string> rows in jobs)
+                {
+                     if (rows.Value.ToLower().Contains(searchTerm.ToLower()))
+                    {
+                        job.Add(jobs);
+                        //Removed break; 
+                    }
+                }
+            }
+            if (job.Count == 0)
+            {
+                System.Console.WriteLine("Search Other IT keywords.");
+            }
+            return job; 
+        }
     }
 }
+
+/*
+ public static FindByValue(string column)
+ {
+ //Do not contain duplicate listings
+ //If searchterm is matched then return row and continue
+ //Test for new columns added to the dataset, use .Count not integer 5
+
+ // Use nested loops like print jobs and += collection or append() etc.
+ // Code is for FindbyValue very similiar to FindByColumnAndValue
+
+// Call FindbyValue within Main Method see hint print message using all
+
+foreach (Dictionary<string,string> row in job) // using the Dictionary.Keys method
+            {
+                aValue = job[key]; 
+                // getting the value and assign it the value
+                if (aValue.ToLower().Contains(searchTerm.ToLower())) 
+                    // check if the aValue contain the SearchTerm
+                {
+                    AllJobs.Add(job);
+                    // If yes then all the Job along with the key and the value
+                    break;
+                }
+            }
+ }
+ */
